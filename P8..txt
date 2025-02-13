@@ -1,0 +1,50 @@
+P8.
+MONGO DB. MAP REDUCE
+
+MongoDB Command to Create and Insert Data 
+db.sales.insertMany([ 
+{ "_id": 1, "product": "Laptop", "category": "Electronics", "amount": 1500 }, 
+{ "_id": 2, "product": "Headphones", "category": "Electronics", "amount": 200 }, 
+{ "_id": 3, "product": "Shirt", "category": "Clothing", "amount": 50 }, 
+{ "_id": 4, "product": "Pants", "category": "Clothing", "amount": 100 }, 
+{ "_id": 5, "product": "Phone", "category": "Electronics", "amount": 800 }, 
+{ "_id": 6, "product": "Shoes", "category": "Footwear", "amount": 120 } 
+]); 
+Map-Reduce Implementation 
+1.	Map Function 
+
+The map function emits a key-value pair where the key is the category and the value is the sales amount. 
+var mapFunction = function() { 
+emit(this.category, this.amount); 
+}; 
+1.	Reduce Function 
+
+The reduce function aggregates the values (sales amounts) for each key (category).
+
+var reduceFunction = function(key, values) { 
+return Array.sum(values); 
+}; 
+1.	Executing Map-Reduce 
+
+db.sales.mapReduce( 
+mapFunction, 
+reduceFunction, 
+{ 
+out: "category_totals" 
+} 
+); 
+ 
+ 
+
+1.	Result 
+
+After running the above, the results will be stored in a new collection named category_totals. To view the results: 
+db.category_totals.find().pretty();
+
+
+ 
+
+
+
+
+
