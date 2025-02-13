@@ -1,4 +1,4 @@
-P1
+P1 SQL
 Perform DDL, DML and TCL queries in any RDBMS. 
 DDL (Data Definition Language) Queries 
 1.	Create a Table 
