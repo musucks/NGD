@@ -1,0 +1,8 @@
+START HADOOP
+sudo su - Hadoop
+
+
+PIG
+wget https://dlcdn.apache.org/pig/pig-0.16.0/pig-0.16.0.tar.gz
+
+
