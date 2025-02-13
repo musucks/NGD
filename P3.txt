@@ -1,0 +1,34 @@
+P3
+
+Wordcount implementation using Pig
+
+1.	Create a Text File: 
+
+Create a file input.txt with some sample text. 
+E.g :-
+Apache Pig is a high-level platform for big data. 
+Pig simplifies processing. 
+Data processing is efficient with Pig.
+
+2.	Copy the File to HDFS: Open a terminal and execute 
+
+hadoop fs -mkdir /user/cloudera/wordcount 
+hadoop fs -put input.txt /user/cloudera/wordcount
+
+3.	Type the code using text editor 
+
+lines = LOAD '/user/cloudera/wordcount/input.txt' AS (line:chararray); 
+words = FOREACH lines GENERATE FLATTEN(TOKENIZE(line)) AS word; 
+grouped = GROUP words BY word; 
+word_count = FOREACH grouped GENERATE group AS word, COUNT(words) AS count; 
+STORE word_count INTO 'wordcount/output' USING PigStorage('\t');
+
+
+4.	Save the file as pig1.pig
+
+5.	Execute the pig script: 
+
+6.	View the output: 
+hadoop fs -ls /user/cloudera/wordcount/output 
+ 
+hadoop fs -cat /user/cloudera/wordcount/output/part-r-00000

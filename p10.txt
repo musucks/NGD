@@ -1,0 +1,98 @@
+step1.
+
+CREATE
+  (john:Person {name: 'John Doe', age: 30, city: 'New York'}),
+  (jane:Person {name: 'Jane Smith', age: 25, city: 'Los Angeles'}),
+  (neoCorp:Company {name: 'NeoCorp', industry: 'Technology'}),
+  (alphaInc:Company {name: 'Alpha Inc.', industry: 'Finance'});
+
+MATCH (n) RETURN n;
+
+step1.1
+MATCH 
+  (john:Person {name: 'John Doe'}), 
+  (jane:Person {name: 'Jane Smith'}),
+  (neoCorp:Company {name: 'NeoCorp'}), 
+  (alphaInc:Company {name: 'Alpha Inc.'})
+CREATE
+  (john)-[:WORKS_FOR {since: 2015}]->(neoCorp),
+  (jane)-[:WORKS_FOR {since: 2018}]->(alphaInc),
+  (john)-[:FRIENDS_WITH {since: 2020}]->(jane);
+
+step 2
+MATCH (a)-[r]->(b) 
+RETURN a.name AS From, TYPE(r) AS Relationship, r.since AS Since, b.name AS To;
+
+step2.1
+MATCH (n) RETURN n;
+
+step3
+CREATE 
+  (alice:Person {name: 'Alice Williams', age: 28, city: 'Chicago'}),
+  (bob:Person {name: 'Bob James', age: 32, city: 'Miami'});
+
+step3.1
+MATCH 
+  (bob:Person {name: 'Bob James'}), 
+  (jane:Person {name: 'Jane Smith'}),
+  (john:Person {name: 'John Doe'})
+CREATE 
+  (bob)-[:FRIENDS_WITH {since: 2022}]->(jane),
+  (bob)-[:FRIENDS_WITH {since: 2023}]->(john);
+
+step3.2
+MATCH 
+  (alice:Person {name: 'Alice Williams'}),
+  (jane:Person {name: 'Jane Smith'}),
+  (alphaInc:Company {name: 'Alpha Inc.'})
+CREATE 
+  (alice)-[:WORKS_FOR {since: 2024}]->(alphaInc);
+
+MATCH (n) RETURN n;
+
+MATCH (a)-[r]->(b) 
+RETURN a.name AS From, TYPE(r) AS Relationship, r.since AS Since, b.name AS To;
+
+
+step4
+MATCH (p:Person) 
+RETURN p.name, p.age, p.city;
+
+step5
+MATCH (a)-[r]->(b) 
+RETURN a.name AS From, TYPE(r) AS Relationship, b.name AS To;
+
+step6
+MATCH (p:Person)-[:WORKS_FOR]->(c:Company {name: 'NeoCorp'})
+RETURN p.name AS Employee, c.name AS Company;
+
+step7
+MATCH (p1:Person {name: 'John Doe'})-[:FRIENDS_WITH]-(mutual)-[:FRIENDS_WITH]-(p2:Person {name: 'Jane Smith'})
+RETURN mutual.name AS MutualFriend;
+
+step 8
+MATCH (p:Person)-[:WORKS_FOR]->(c:Company)
+RETURN c.name AS Company, COLLECT(p.name) AS Employees;
+
+step9
+MATCH
+  (p1:Person)-[:WORKS_FOR]->(c:Company)<-[:WORKS_FOR]-(p2:Person)
+WHERE NOT (p1)-[:FRIENDS_WITH]-(p2) AND p1 <> p2
+RETURN p1.name AS Person, p2.name AS SuggestedFriend, c.name AS CommonCompany;
+
+step10
+MATCH path = shortestPath((john:Person {name: 'John Doe'})-[:FRIENDS_WITH*..5]-(jane:Person {name: 'Jane Smith'}))
+RETURN path;
+
+step 11
+MATCH (p:Person)-[:FRIENDS_WITH]-(friend)
+RETURN p.name AS Person, COUNT(friend) AS NumberOfConnections;
+
+step12
+MATCH (c:Company)<-[:WORKS_FOR]-(employee)
+RETURN c.name AS Company, COUNT(employee) AS EmployeeCount
+ORDER BY EmployeeCount DESC;
+
+step13
+MATCH (n) DETACH DELETE n;
+

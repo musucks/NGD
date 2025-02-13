@@ -1,0 +1,153 @@
+P7.
+Aim: Create a document and collection in MongoDB, performing advanced queries with conditional operators and aggregate functions 
+
+1. Creating a Document: A document in MongoDB is a JSON-like structure used to store data. It consists of key-value pairs and supports nested structures. A typical document might look like: 
+{ 
+"name": "Alice", 
+"age": 28, 
+"skills": ["JavaScript", "Python"], 
+"isEmployed": true 
+} 
+2. Creating a Collection: A collection in MongoDB is analogous to a table in relational databases, but it does not enforce a strict schema. Collections automatically get created when the first document is inserted. 
+Example: 
+db.users.insertOne({ name: "Alice", age: 28 }); 
+Performing Advanced Queries with Conditional Operators 
+Conditional Operators: 
+MongoDB provides several conditional operators to refine query results. 
+Examples include: 
+	$eq (equal to) 
+	$ne (not equal to) 
+	$gt (greater than), $lt (less than) 
+	$in (matches any value in an array) 
+
+Example Query: Retrieve users aged above 25 but below 40. 
+db.users.find({ age: { $gt: 25, $lt: 40 } }); 
+Logical Operators: 
+Combine multiple conditions with operators like $and, $or, $not. 
+Example: Find users aged above 30 or employed. 
+db.users.find({ $or: [{ age: { $gt: 30 } }, { isEmployed: true }] }); 
+
+Using Aggregate Functions 
+MongoDB's aggregation framework processes data through a pipeline of stages, such as $match, $group, and $sort. 
+Example: Calculate average age by employment status. 
+db.users.aggregate([ 
+{ $group: { _id: "$isEmployed", avgAge: { $avg: "$age" } } } 
+]); 
+Pipeline Stages: 
+1. $match: Filters documents based on criteria. 
+2. $group: Groups documents and performs operations like sum, avg, min, 
+max. 
+3. $sort: Orders the results. 
+By combining these functionalities, MongoDB allows for powerful and flexible 
+data management and analysis. 
+MongoDB Advanced Queries with Conditional Operators and Aggregate Functions 
+Step 1: Creating a MongoDB Collection and Document 
+Create a collection student in MongoDB and insert data in it. 
+1. Insert documents into the students collection: 
+db.students.insertMany([ 
+{ 
+studentId: 1, 
+name: "Alice Johnson", 
+age: 21, 
+subjects: ["Math", "Physics", "Computer Science"], 
+scores: { math: 85, physics: 90, cs: 92 }, 
+city: "New York", 
+enrollmentYear: 2021 
+}, 
+{ 
+studentId: 2, 
+name: "Bob Smith", 
+age: 22, 
+subjects: ["Math", "Biology", "Chemistry"],
+scores: { math: 75, biology: 80, chemistry: 78 }, 
+city: "San Francisco", 
+enrollmentYear: 2020 
+}, 
+{ 
+studentId: 3, 
+name: "Charlie Brown", 
+age: 23, 
+subjects: ["Math", "Physics", "Economics"], 
+scores: { math: 65, physics: 70, economics: 75 }, 
+city: "Los Angeles", 
+enrollmentYear: 2019 
+}, 
+{ 
+studentId: 4, 
+name: "Diana Prince", 
+age: 20, 
+subjects: ["Math", "Physics", "Computer Science"], 
+scores: { math: 95, physics: 89, cs: 99 }, 
+city: "New York", 
+enrollmentYear: 2022 
+} 
+]); 
+
+
+
+Step 2: Performing Advanced Queries 
+1. Using Conditional Operators 
+Find students who scored above 80 in Math and are enrolled after 2020. 
+db.students.find({ 
+$and: [ 
+{ "scores.math": { $gt: 80 } }, 
+{ enrollmentYear: { $gt: 2020 } } 
+] 
+});
+ 
+ 
+2. Query with $or 
+Find students from either "New York" or "San Francisco". 
+db.students.find({ 
+city: { $in: ["New York", "San Francisco"] } 
+}); 
+ 
+ 
+ 
+
+3. Aggregation with Aggregate Functions 
+a. Calculate the Average Math Score 
+db.students.aggregate([ 
+{ 
+$group: { 
+_id: null, 
+avgMathScore: { $avg: "$scores.math" } 
+} 
+} 
+]); 
+ 
+b. Count Students Per City 
+db.students.aggregate([ 
+{ 
+$group: { 
+_id: "$city", 
+count: { $sum: 1 } 
+} 
+} 
+]); 
+ 
+c. Find the Top Scorer in Computer Science 
+db.students.aggregate([ 
+{ 
+$project: { 
+name: 1, 
+city: 1, 
+csScore: "$scores.cs"
+} 
+}, 
+{ $sort: { csScore: -1 } }, 
+{ $limit: 1 } 
+]); 
+ 
+
+
+d. Filter and Group Students Enrolled After 2020 by Age 
+db.students.aggregate([ 
+{ $match: { enrollmentYear: { $gt: 2020 } } }, 
+{ 
+$group: { 
+_id: "$age", 
+totalStudents: { $sum: 1 } 
+} 
+} 
+]);
